@@ -1,7 +1,5 @@
-from msilib.schema import SelfReg
 import tkinter as tk
 from tkinter import ttk
-from typing import Self
 from Futbolista import Futbolista
 
 class GUI:
@@ -108,12 +106,17 @@ class GUI:
         seleccionado = self.table.selection()
         if seleccionado:
             item = self.table.item(seleccionado)
-            futbolista = item['values']
-            if futbolista in self.lista_futbolistas:
-                self.lista_futbolistas.remove(futbolista)
-                self.actualizar_tabla_futbolistas()
-            else:
-                print("El futbolista seleccionado no está en la lista.")
+        nombre = item['values'][0]  # Obtener el nombre del futbolista seleccionado
+        futbolista_a_eliminar = None
+        
+        for futbolista in self.lista_futbolistas:
+            if futbolista.nombre == nombre:
+                futbolista_a_eliminar = futbolista
+                break
+
+        if futbolista_a_eliminar:
+            self.lista_futbolistas.remove(futbolista_a_eliminar)
+            self.actualizar_tabla_futbolistas()
 
     def agregar_camisa(self):
         futbolista = self.combobox.get()
@@ -124,6 +127,7 @@ class GUI:
 
     def actualizar_tabla_futbolistas(self):
         self.table.delete(*self.table.get_children())
+        self.combobox['values'] = [futbolista.nombre for futbolista in self.lista_futbolistas]
         for futbolista in self.lista_futbolistas:
             self.table.insert('', 'end', values=(futbolista.nombre, futbolista.edad))
 
@@ -137,10 +141,5 @@ class GUI:
 
 gui = GUI()
 gui.iniciar()
-
-
-
-
-
 
 
